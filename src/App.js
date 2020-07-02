@@ -1,27 +1,22 @@
 import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
+import Pages from '../src/pages';
+import Login from "../src/pages/login";
 
-const EXCHANGE_RATES = gql`
-  {
-  books{
-    name,
-    genre
+
+const IS_LOGGED_IN = gql`
+  query IsUserLoggedIn {
+    isLoggedIn @client
   }
-}
 `;
 
+function IsLoggedIn() {
+  const { data } = useQuery(IS_LOGGED_IN);
+  console.log(data)
+  return data.isLoggedIn ? <Pages /> : <Login />;
+}
+
 export default function ExchangeRates() {
-  const { loading, error, data } = useQuery(EXCHANGE_RATES);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
-
-  return data.books.map(({ name, genre }) => (
-    <div key={name}>
-      <p>
-        {name}: {genre}
-      </p>
-    </div>
-  ));
+    return(<IsLoggedIn />)
 }

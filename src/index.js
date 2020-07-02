@@ -5,11 +5,21 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
+import { resolvers, typeDefs } from "./resolvers";
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
-const client = new ApolloClient({
-  uri: 'http://localhost:3000/graphql',
+const cache = new InMemoryCache();
+
+const client = new ApolloClient({cache,
+  uri: 'http://localhost:3000/graphql',typeDefs,resolvers
 });
 
+cache.writeData({
+  data: {
+    isLoggedIn: !!localStorage.getItem("token"),
+    books: []
+  }
+});
 
 ReactDOM.render(
   <React.StrictMode>
